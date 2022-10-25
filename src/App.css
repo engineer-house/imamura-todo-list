@@ -25,7 +25,7 @@ button{
   background: white;
 }
 
-input{
+.incompleteTodo{
   margin:2px 8px;
   border-right:none;
   border-left:none;
@@ -36,3 +36,14 @@ input{
   width: 300px;
 }
 
+.completeTodo{
+  margin:2px 8px;
+  border-right:none;
+  border-left:none;
+  border-top:none;
+  outline:none;
+  color: black;
+  font-size: 1em;
+  width: 300px;
+  text-decoration:line-through;
+}
