@@ -1,96 +1,87 @@
-import logo from './logo.svg';
-import './App.css';
+import './App.css'
 import { useState } from 'react'
-import {v4 as uuid} from 'uuid'
+import { v4 as uuid } from 'uuid'
+import { TodoList } from './components/TodoList'
 
-function App() {
+function App () {
 
-  const [todoText,setTodoText] = useState("")
-  const [todoList,setTodoList] = useState([
+  const [todoList, setTodoList] = useState([
     {
-      id:uuid(),
-      text:"",
+      id: uuid(),
+      text: '',
       isDone: false,
     },
   ])
 
-  const [checkFlag,setCheckFlag] = useState(true)
-
-  const onChangeTodoText = (event) => setTodoText(event.target.value)
-
-  const handleRemoveTask = (id,index,todo) => {
-    const listNum = todoList.length
-    if(listNum === 1){
-      return setTodoList(todoList.map((todo)=>{
-        alert(todo.isDone)
-        return{
-          ...todo,
-          text: "",
+  const handleTodoText = (id, text) => {
+    setTodoList(todoList.map((todo) => {
+        if (todo.id !== id) {
+          return todo
         }
-      }))
-      // setTodoList(todoList.map((todo) => {}delete todo.text))
+        return {
+          ...todo,
+          text,
+        }
+      },
+    ))
+  }
 
+  const handleRemoveTask = (id) => {
+    const listNum = todoList.length
+    if (listNum === 1) {
+      return setTodoList([
+        {
+          id: uuid(),
+          text: '',
+          isDone: false,
+        },
+      ])
     }
-    if(index === 0) return
-    setTodoList(todoList.filter((todo)=>todo.id !== id))
+    setTodoList(todoList.filter((todo) => todo.id !== id))
   }
 
   const toggleTaskCheck = (id) => {
-   setTodoList(todoList.map((todo)=>{
-     let isDone
-     if(todo.id === id){
-       isDone = !todo.isDone
-     }else{
-       isDone = todo.isDone
-     }
-     return{
-       ...todo,
-       isDone: isDone,
-     }
-   }))
+    setTodoList(todoList.map((todo) => {
+      return {
+        ...todo,
+        isDone: todo.id === id ? !todo.isDone : todo.isDone,
+      }
+    }))
   }
 
-  const handleAddTask = (e)=> {
-   if (e.key == 'Enter') {
-     if(todoText==="")return
-     setTodoList([
-       ...todoList,
-       {
-         id:uuid(),
-         text:todoText,
-       }
-     ])
-     setTodoText("")
+  const handleAddTask = (e) => {
+    if (e.key === 'Enter') {
+      setTodoList([
+        ...todoList,
+        {
+          id: uuid(),
+          text: '',
+          inDone: false,
+        },
+      ])
     }
-   }
+  }
 
   return (
     <div>
-    <div>
-      <ul>
-        {todoList.map((todo,index)=>{
-          return(
-        <div key={todo.id}>
-          {todo.isDone && <button className='CheckOff-button' onClick={()=>toggleTaskCheck(todo.id)}>✔</button>}
-          {todo.isDone || <button className='check-button' onClick={()=>toggleTaskCheck(todo.id)}></button>}
-          <input className={todo.isDone ? "completeTodo" : "incompleteTodo"}
-                 value={todoList.index}
-                 onChange={onChangeTodoText}
-                 placeholder="やることを入力してください"
-                 onKeyPress={handleAddTask}
-          />
-          <button onClick={() => handleRemoveTask(todo,todo.id,index)}>
-            del
-          </button>
-        </div>
-          )
-        })}
-      </ul>
-    </div>
+      <div>
+        <ul>
+          {todoList.map((todo) => {
+            return (
+              <TodoList
+                todo={todo}
+                toggleTaskCheck={toggleTaskCheck}
+                handleTodoText={handleTodoText}
+                handleAddTask={handleAddTask}
+                handleRemoveTask={handleRemoveTask}
+              />
+            )
+          })}
+        </ul>
       </div>
-  );
+    </div>
+  )
 }
 
-
-export default App;
+export default App
 
